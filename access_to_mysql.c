@@ -11,7 +11,7 @@ int init_connect_mysql()
 {
 	mysql_init(&my_connection);
 	if(NULL == mysql_real_connect(&my_connection,"localhost","root",
-									"vlwzy2012","test",0,NULL,0))
+									"to writ","test",0,NULL,0))
 	{
 		fprintf(stderr,"connection failed\n");
 		if(mysql_error(&my_connection))
