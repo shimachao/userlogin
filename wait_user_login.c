@@ -33,7 +33,7 @@ int main(int argc,char *argv[])
 		close(sockfd);
 		return -1;
 	}
-
+	printf("serv port: %d\n",ntohs(myaddr.sin_port));
 	struct sockaddr_in clientaddr;
 	bzero(&clientaddr,sizeof(clientaddr));
 	socklen_t addrlen = sizeof(clientaddr);
@@ -43,6 +43,7 @@ int main(int argc,char *argv[])
 		ssize_t len = recvfrom(sockfd,(void*)buff,1024,0,(struct sockaddr*)&clientaddr,&addrlen);
 		if (len < 0) continue;
 	
+		printf("recv a udp message from %d\n",ntohs(clientaddr.sin_port));
 		size_t emailen = (size_t)buff[0];
 		char *email = (char*)malloc(emailen+1);
 		bzero(email,emailen+1);
