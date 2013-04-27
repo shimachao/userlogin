@@ -26,13 +26,15 @@ int main(int argc,char *argv[])
 	bzero(&myaddr,sizeof(myaddr));
 	myaddr.sin_family = AF_INET;
 	myaddr.sin_addr.s_addr = INADDR_ANY;
-	myaddr.sin_port = htons(PORT);
+	//myaddr.sin_port = htons(PORT);
 	if(bind(sockfd,(struct sockaddr*)&myaddr,sizeof(myaddr)) != 0)
 	{
 		perror("bind error!");
 		close(sockfd);
 		return -1;
 	}
+	socklen_t len = sizeof(myaddr);
+	getsockname(sockfd,(struct sockaddr*)&myaddr,&len);
 	printf("serv port: %d\n",ntohs(myaddr.sin_port));
 	struct sockaddr_in clientaddr;
 	bzero(&clientaddr,sizeof(clientaddr));
@@ -54,9 +56,14 @@ int main(int argc,char *argv[])
 		strncpy(password,(char*)&buff[2+emailen],passwordlen);
 		//varigy
 		signed char reply = 0;
-		if(0 != user_verify(email,password))
+		if(-1 == user_verify(email,password))
 		{
 			reply = -1;
+			printf("no this user!\n");
+		}
+		else
+		{
+			printf("verify success\n");
 		}
 		sendto(sockfd,(void*)&reply,1,0,(struct sockaddr*)&clientaddr,sizeof(clientaddr));
 		
