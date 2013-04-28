@@ -65,7 +65,7 @@ int user_verify(char *email,char *password)
 	}
 	MYSQL_ROW sqlrow = mysql_fetch_row(res_ptr);
 	char *passmd5 = md5_encrypt(password);
-	if(strcmp(passmd5,sqlrow[0]) == 0)
+	if(sqlrow != NULL && strcmp(passmd5,sqlrow[0]) == 0)
 	{
 		free(passmd5);
 		return 0;

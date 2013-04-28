@@ -36,16 +36,15 @@ int main(int argc,char *argv[])
 	socklen_t len = sizeof(myaddr);
 	getsockname(sockfd,(struct sockaddr*)&myaddr,&len);
 	printf("serv port: %d\n",ntohs(myaddr.sin_port));
-	struct sockaddr_in clientaddr;
-	bzero(&clientaddr,sizeof(clientaddr));
-	socklen_t addrlen = sizeof(clientaddr);
 	while(1)
 	{
 		char buff[1024] ={'\0'};
+		struct sockaddr_in clientaddr;
+		bzero(&clientaddr,sizeof(clientaddr));
+		socklen_t addrlen = sizeof(clientaddr);
 		ssize_t len = recvfrom(sockfd,(void*)buff,1024,0,(struct sockaddr*)&clientaddr,&addrlen);
 		if (len < 0) continue;
-	
-		printf("recv a udp message from %d\n",ntohs(clientaddr.sin_port));
+		printf("recv a udp message from ip: %s %d\n",inet_ntoa(clientaddr.sin_addr),ntohs(clientaddr.sin_port));
 		size_t emailen = (size_t)buff[0];
 		char *email = (char*)malloc(emailen+1);
 		bzero(email,emailen+1);
@@ -55,14 +54,15 @@ int main(int argc,char *argv[])
 		bzero(password,passwordlen+1);
 		strncpy(password,(char*)&buff[2+emailen],passwordlen);
 		//varigy
-		signed char reply = 0;
+		signed char reply[4] = {'\0'};
 		if(-1 == user_verify(email,password))
 		{
-			reply = -1;
+			reply[0] = 'n';
 			printf("no this user!\n");
 		}
 		else
 		{
+			reply[0] = 'y';
 			printf("verify success\n");
 		}
 		sendto(sockfd,(void*)&reply,1,0,(struct sockaddr*)&clientaddr,sizeof(clientaddr));
