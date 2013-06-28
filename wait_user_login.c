@@ -9,7 +9,8 @@
 #include <string.h>
 #include "access_to_mysql.h"
 
-#define PORT 0
+#define PORT 9000
+
 int main(int argc,char *argv[])
 {
 	if(init_connect_mysql() != 0)
@@ -26,7 +27,7 @@ int main(int argc,char *argv[])
 	bzero(&myaddr,sizeof(myaddr));
 	myaddr.sin_family = AF_INET;
 	myaddr.sin_addr.s_addr = INADDR_ANY;
-	//myaddr.sin_port = htons(PORT);
+	myaddr.sin_port = htons(PORT);
 	if(bind(sockfd,(struct sockaddr*)&myaddr,sizeof(myaddr)) != 0)
 	{
 		perror("bind error!");

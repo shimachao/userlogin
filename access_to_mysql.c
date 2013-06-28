@@ -12,7 +12,7 @@ int init_connect_mysql()
 {
 	mysql_init(&my_connection);
 	if(NULL == mysql_real_connect(&my_connection,"localhost","root",
-									"secret","test",0,NULL,0))
+									"secrret","vlog_v1",0,NULL,0))
 	{
 		fprintf(stderr,"connection failed\n");
 		if(mysql_error(&my_connection))
